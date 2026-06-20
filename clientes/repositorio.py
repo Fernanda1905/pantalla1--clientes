@@ -71,7 +71,7 @@ class ClienteRepositorio:
 
         desde = (pagina - 1) * por_pagina
         hasta = desde + por_pagina - 1
-        resp = query.order("last_name").range(desde, hasta).execute()
+        resp = query.order("customer_id").range(desde, hasta).execute()
 
         total = resp.count or 0
         items = [_a_cliente(f) for f in (resp.data or [])]
