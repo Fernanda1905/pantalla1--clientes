@@ -34,13 +34,14 @@ def _a_cliente(fila: dict) -> Cliente:
         country=country.get("country", ""),
         codigo_postal=address.get("postal_code"),
         telefono=address.get("phone"),
+        dni=fila.get("dni"),
         store_id=fila.get("store_id", 0),
         estado=estado,
         fecha_registro=fecha_registro,
     )
 
 _SELECT = (
-    "customer_id,store_id,first_name,last_name,email,active,create_date,"
+    "customer_id,store_id,first_name,last_name,email,active,create_date,dni,"
     "address(address,postal_code,phone,city(city,country(country)))"
 )
 
@@ -90,6 +91,18 @@ class ClienteRepositorio:
 
     # Registro de cliente (POST)
     # customer, su API expone el servicio de crear clientes.
+
+    def obtener_por_dni(self, dni: str) -> Cliente | None:
+        """Obtiene un cliente por DNI, o None si no existe."""
+        resp = (
+            self.db.table("customer")
+            .select(_SELECT)
+            .eq("dni", dni)
+            .limit(1)
+            .execute()
+        )
+        filas = resp.data or []
+        return _a_cliente(filas[0]) if filas else None
 
     def existe_email(self, email: str) -> bool:
         """True si ya hay un cliente con ese email."""

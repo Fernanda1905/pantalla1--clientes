@@ -24,6 +24,7 @@ class Cliente:
     country: str
     codigo_postal: str | None
     telefono: str | None
+    dni: str | None
     store_id: int
     estado: EstadoCliente
     fecha_registro: datetime
@@ -43,6 +44,7 @@ class Cliente:
             "country": self.country,
             "codigo_postal": self.codigo_postal,
             "telefono": self.telefono,
+            "dni": self.dni,
             "store_id": self.store_id,
             "estado": self.estado.value,
             "fecha_registro": self.fecha_registro.strftime("%d/%m/%Y"),

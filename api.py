@@ -91,6 +91,14 @@ def listar_clientes(
     return resultado
 
 
+@app.get("/clientes/dni/{dni}")
+def obtener_por_dni(dni: str):
+    try:
+        return svc.obtener_cliente_por_dni(dni).to_dict()
+    except ClienteNoEncontrado:
+        raise HTTPException(status_code=404, detail=f"Cliente con DNI {dni} no encontrado")
+
+
 @app.get("/clientes/{customer_id}")
 def obtener_cliente(customer_id: int):
     try:

@@ -44,6 +44,13 @@ class ClienteServicio:
             raise ClienteNoEncontrado(customer_id)
         return cliente
 
+    def obtener_cliente_por_dni(self, dni: str) -> Cliente:
+        """Devuelve un cliente por DNI. Lanza ClienteNoEncontrado si no existe."""
+        cliente = self.repo.obtener_por_dni(dni)
+        if not cliente:
+            raise ClienteNoEncontrado(dni)
+        return cliente
+
     def registrar_cliente(self, datos: DatosNuevoCliente) -> Cliente:
         """Registra un cliente nuevo: valida los datos, verifica que el email no
         esté repetido, lo crea (con su dirección) y devuelve el Cliente creado."""
