@@ -9,13 +9,6 @@ Esta API es la única vía por la que se consultan y registran clientes.
 pip install -r requirements.txt
 ```
 
-## Configurar credenciales
-Crear el archivo `.env` con:
-```
-SUPABASE_URL=https://xvtkzpoecnmcfekihneo.supabase.co
-SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2dGt6cG9lY25tY2Zla2lobmVvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NDc3NjMsImV4cCI6MjA5NTQyMzc2M30.iLpgcaiCTgkxybD3aNpDdo9H0o5-8ZfCZzsUQoR7haA
-```
-
 ## Levantar la API
 ```
 uvicorn api:app --reload --port 8001
