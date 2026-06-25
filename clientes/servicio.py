@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 
 from .excepciones import ClienteNoEncontrado, EmailDuplicado, DatosInvalidos
-from .modelos import Cliente, EstadoCliente, DatosNuevoCliente
+from .modelos import Cliente, EstadoCliente, DatosNuevoCliente, DatosEdicionCliente
 from .repositorio import ClienteRepositorio
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -80,3 +80,23 @@ class ClienteServicio:
             "store_id": datos.store_id,
         })
         return self.obtener_cliente(nuevo_id)
+
+    def dar_de_baja(self, customer_id: int) -> Cliente:
+        """Marca un cliente como inactivo. Lanza ClienteNoEncontrado si no existe."""
+        self.obtener_cliente(customer_id)
+        self.repo.dar_de_baja(customer_id)
+        return self.obtener_cliente(customer_id)
+
+    def editar_cliente(self, customer_id: int, datos: DatosEdicionCliente) -> Cliente:
+        """Edita los campos provistos de un cliente. Lanza ClienteNoEncontrado si no existe."""
+        self.obtener_cliente(customer_id)
+        mapeo = {
+            "first_name": datos.nombre,
+            "last_name": datos.apellido,
+            "email": datos.email,
+            "store_id": datos.store_id,
+        }
+        campos = {col: val for col, val in mapeo.items() if val is not None}
+        if campos:
+            self.repo.editar(customer_id, campos)
+        return self.obtener_cliente(customer_id)

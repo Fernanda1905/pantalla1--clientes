@@ -22,7 +22,7 @@ from pydantic import BaseModel
 from pathlib import Path
 
 from clientes.servicio import ClienteServicio
-from clientes.modelos import EstadoCliente, DatosNuevoCliente
+from clientes.modelos import EstadoCliente, DatosNuevoCliente, DatosEdicionCliente
 from clientes.excepciones import ClienteNoEncontrado, EmailDuplicado, DatosInvalidos
 
 app = FastAPI(
@@ -47,6 +47,18 @@ class ClienteNuevoIn(BaseModel):
     city: str
     country: str
     store_id: int = 1
+    codigo_postal: str | None = None
+    telefono: str | None = None
+
+
+class ClienteEdicionIn(BaseModel):
+    nombre: str | None = None
+    apellido: str | None = None
+    email: str | None = None
+    address: str | None = None
+    city: str | None = None
+    country: str | None = None
+    store_id: int | None = None
     codigo_postal: str | None = None
     telefono: str | None = None
 
@@ -103,6 +115,29 @@ def obtener_por_dni(dni: str):
 def obtener_cliente(customer_id: int):
     try:
         return svc.obtener_cliente(customer_id).to_dict()
+    except ClienteNoEncontrado:
+        raise HTTPException(status_code=404, detail=f"Cliente {customer_id} no encontrado")
+
+
+@app.put("/clientes/{customer_id}")
+def editar_cliente(customer_id: int, datos: ClienteEdicionIn):
+    try:
+        actualizado = svc.editar_cliente(customer_id, DatosEdicionCliente(
+            nombre=datos.nombre, apellido=datos.apellido, email=datos.email,
+            address=datos.address, city=datos.city, country=datos.country,
+            store_id=datos.store_id,
+            codigo_postal=datos.codigo_postal, telefono=datos.telefono,
+        ))
+        return actualizado.to_dict()
+    except ClienteNoEncontrado:
+        raise HTTPException(status_code=404, detail=f"Cliente {customer_id} no encontrado")
+
+
+@app.delete("/clientes/{customer_id}")
+def dar_de_baja(customer_id: int):
+    try:
+        svc.dar_de_baja(customer_id)
+        return {"mensaje": f"Cliente {customer_id} dado de baja correctamente"}
     except ClienteNoEncontrado:
         raise HTTPException(status_code=404, detail=f"Cliente {customer_id} no encontrado")
 

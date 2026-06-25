@@ -139,6 +139,14 @@ class ClienteRepositorio:
         nuevo = self.db.table("address").insert(datos).execute()
         return nuevo.data[0]["address_id"]
 
+    def dar_de_baja(self, customer_id: int) -> None:
+        """Marca un cliente como inactivo (active = 0)."""
+        self.db.table("customer").update({"active": 0}).eq("customer_id", customer_id).execute()
+
+    def editar(self, customer_id: int, datos: dict) -> None:
+        """Actualiza los campos indicados en la tabla customer."""
+        self.db.table("customer").update(datos).eq("customer_id", customer_id).execute()
+
     def crear(self, datos: dict) -> int:
         """Registra un cliente nuevo resolviendo la dirección en cascada
         (country -> city -> address -> customer). Devuelve el customer_id."""
