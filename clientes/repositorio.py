@@ -112,6 +112,14 @@ class ClienteRepositorio:
         )
         return bool(resp.data)
 
+    def existe_dni(self, dni: str) -> bool:
+        """True si ya hay un cliente con ese DNI."""
+        resp = (
+            self.db.table("customer").select("customer_id")
+            .eq("dni", dni).limit(1).execute()
+        )
+        return bool(resp.data)
+
     def _obtener_o_crear_country(self, country: str) -> int:
         resp = self.db.table("country").select("country_id").eq("country", country).limit(1).execute()
         if resp.data:
@@ -163,6 +171,7 @@ class ClienteRepositorio:
             "address_id": address_id,
             "active": 1,
             "create_date": datetime.utcnow().isoformat(),
+            "dni": datos.get("dni"),
         }
         nuevo = self.db.table("customer").insert(fila).execute()
         return nuevo.data[0]["customer_id"]

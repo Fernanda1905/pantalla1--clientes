@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 
-from .excepciones import ClienteNoEncontrado, EmailDuplicado, DatosInvalidos
+from .excepciones import ClienteNoEncontrado, EmailDuplicado, DniDuplicado, DatosInvalidos
 from .modelos import Cliente, EstadoCliente, DatosNuevoCliente, DatosEdicionCliente
 from .repositorio import ClienteRepositorio
 
@@ -68,6 +68,12 @@ class ClienteServicio:
         if self.repo.existe_email(datos.email):
             raise EmailDuplicado(datos.email)
 
+        if datos.dni is not None:
+            if len(datos.dni) != 8 or not datos.dni.isdigit():
+                raise DatosInvalidos("El DNI debe tener exactamente 8 dígitos numéricos.")
+            if self.repo.existe_dni(datos.dni):
+                raise DniDuplicado(datos.dni)
+
         nuevo_id = self.repo.crear({
             "nombre": datos.nombre.strip(),
             "apellido": datos.apellido.strip(),
@@ -77,6 +83,7 @@ class ClienteServicio:
             "country": datos.country.strip(),
             "codigo_postal": datos.codigo_postal,
             "telefono": datos.telefono,
+            "dni": datos.dni,
             "store_id": datos.store_id,
         })
         return self.obtener_cliente(nuevo_id)
@@ -90,11 +97,19 @@ class ClienteServicio:
     def editar_cliente(self, customer_id: int, datos: DatosEdicionCliente) -> Cliente:
         """Edita los campos provistos de un cliente. Lanza ClienteNoEncontrado si no existe."""
         self.obtener_cliente(customer_id)
+
+        if datos.dni is not None:
+            if len(datos.dni) != 8 or not datos.dni.isdigit():
+                raise DatosInvalidos("El DNI debe tener exactamente 8 dígitos numéricos.")
+            if self.repo.existe_dni(datos.dni):
+                raise DniDuplicado(datos.dni)
+
         mapeo = {
             "first_name": datos.nombre,
             "last_name": datos.apellido,
             "email": datos.email,
             "store_id": datos.store_id,
+            "dni": datos.dni,
         }
         campos = {col: val for col, val in mapeo.items() if val is not None}
         if campos:

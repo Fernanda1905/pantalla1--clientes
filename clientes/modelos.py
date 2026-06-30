@@ -63,6 +63,8 @@ class DatosNuevoCliente:
     store_id: int = 1
     codigo_postal: str | None = None
     telefono: str | None = None
+    dni: str | None = None
+    dni: str | None = None
 
 
 # Datos para editar un cliente (entrada del PUT) — todos opcionales
@@ -78,3 +80,4 @@ class DatosEdicionCliente:
     store_id: int | None = None
     codigo_postal: str | None = None
     telefono: str | None = None
+    dni: str | None = None

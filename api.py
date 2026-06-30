@@ -23,7 +23,7 @@ from pathlib import Path
 
 from clientes.servicio import ClienteServicio
 from clientes.modelos import EstadoCliente, DatosNuevoCliente, DatosEdicionCliente
-from clientes.excepciones import ClienteNoEncontrado, EmailDuplicado, DatosInvalidos
+from clientes.excepciones import ClienteNoEncontrado, EmailDuplicado, DniDuplicado, DatosInvalidos
 
 app = FastAPI(
     title="API Pantalla 1 - Clientes (Andrea)",
@@ -49,6 +49,7 @@ class ClienteNuevoIn(BaseModel):
     store_id: int = 1
     codigo_postal: str | None = None
     telefono: str | None = None
+    dni: str | None = None
 
 
 class ClienteEdicionIn(BaseModel):
@@ -61,6 +62,7 @@ class ClienteEdicionIn(BaseModel):
     store_id: int | None = None
     codigo_postal: str | None = None
     telefono: str | None = None
+    dni: str | None = None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -127,10 +129,15 @@ def editar_cliente(customer_id: int, datos: ClienteEdicionIn):
             address=datos.address, city=datos.city, country=datos.country,
             store_id=datos.store_id,
             codigo_postal=datos.codigo_postal, telefono=datos.telefono,
+            dni=datos.dni,
         ))
         return actualizado.to_dict()
     except ClienteNoEncontrado:
         raise HTTPException(status_code=404, detail=f"Cliente {customer_id} no encontrado")
+    except DniDuplicado as e:
+        raise HTTPException(status_code=409, detail=str(e))
+    except DatosInvalidos as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
 @app.delete("/clientes/{customer_id}")
@@ -150,9 +157,12 @@ def registrar_cliente(datos: ClienteNuevoIn):
             address=datos.address, city=datos.city, country=datos.country,
             store_id=datos.store_id,
             codigo_postal=datos.codigo_postal, telefono=datos.telefono,
+            dni=datos.dni,
         ))
         return nuevo.to_dict()
     except EmailDuplicado as e:
+        raise HTTPException(status_code=409, detail=str(e))
+    except DniDuplicado as e:
         raise HTTPException(status_code=409, detail=str(e))
     except DatosInvalidos as e:
         raise HTTPException(status_code=400, detail=str(e))

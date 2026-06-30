@@ -19,5 +19,13 @@ class EmailDuplicado(ErrorClientes):
         self.email = email
 
 
+class DniDuplicado(ErrorClientes):
+    """Se lanza cuando ya existe un cliente con el mismo DNI."""
+
+    def __init__(self, dni: str) -> None:
+        super().__init__(f"Ya existe un cliente registrado con el DNI '{dni}'.")
+        self.dni = dni
+
+
 class DatosInvalidos(ErrorClientes):
     """Se lanza cuando los datos de un cliente no pasan las validaciones."""
