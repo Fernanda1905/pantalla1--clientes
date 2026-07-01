@@ -1,0 +1,37 @@
+[35mapi.py[m[36m:[m[32m52[m[36m:[m    [1;31mdni[m: str | None = None
+[35mapi.py[m[36m:[m[32m65[m[36m:[m    [1;31mdni[m: str | None = None
+[35mapi.py[m[36m:[m[32m108[m[36m:[m@app.get("/clientes/[1;31mdni[m/{[1;31mdni[m}")
+[35mapi.py[m[36m:[m[32m109[m[36m:[mdef obtener_por_[1;31mdni[m([1;31mdni[m: str):
+[35mapi.py[m[36m:[m[32m111[m[36m:[m        return svc.obtener_cliente_por_[1;31mdni[m([1;31mdni[m).to_dict()
+[35mapi.py[m[36m:[m[32m113[m[36m:[m        raise HTTPException(status_code=404, detail=f"Cliente con DNI {[1;31mdni[m} no encontrado")
+[35mapi.py[m[36m:[m[32m132[m[36m:[m            [1;31mdni[m=datos.[1;31mdni[m,
+[35mapi.py[m[36m:[m[32m160[m[36m:[m            [1;31mdni[m=datos.[1;31mdni[m,
+[35mclientes/excepciones.py[m[36m:[m[32m25[m[36m:[m    def __init__(self, [1;31mdni[m: str) -> None:
+[35mclientes/excepciones.py[m[36m:[m[32m26[m[36m:[m        super().__init__(f"Ya existe un cliente registrado con el DNI '{[1;31mdni[m}'.")
+[35mclientes/excepciones.py[m[36m:[m[32m27[m[36m:[m        self.[1;31mdni[m = [1;31mdni[m
+[35mclientes/modelos.py[m[36m:[m[32m27[m[36m:[m    [1;31mdni[m: str | None
+[35mclientes/modelos.py[m[36m:[m[32m47[m[36m:[m            "[1;31mdni[m": self.[1;31mdni[m,
+[35mclientes/modelos.py[m[36m:[m[32m66[m[36m:[m    [1;31mdni[m: str | None = None
+[35mclientes/modelos.py[m[36m:[m[32m67[m[36m:[m    [1;31mdni[m: str | None = None
+[35mclientes/modelos.py[m[36m:[m[32m83[m[36m:[m    [1;31mdni[m: str | None = None
+[35mclientes/repositorio.py[m[36m:[m[32m37[m[36m:[m        [1;31mdni[m=fila.get("[1;31mdni[m"),
+[35mclientes/repositorio.py[m[36m:[m[32m44[m[36m:[m    "customer_id,store_id,first_name,last_name,email,active,create_date,[1;31mdni[m,"
+[35mclientes/repositorio.py[m[36m:[m[32m95[m[36m:[m    def obtener_por_[1;31mdni[m(self, [1;31mdni[m: str) -> Cliente | None:
+[35mclientes/repositorio.py[m[36m:[m[32m100[m[36m:[m            .eq("[1;31mdni[m", [1;31mdni[m)
+[35mclientes/repositorio.py[m[36m:[m[32m115[m[36m:[m    def existe_[1;31mdni[m(self, [1;31mdni[m: str) -> bool:
+[35mclientes/repositorio.py[m[36m:[m[32m119[m[36m:[m            .eq("[1;31mdni[m", [1;31mdni[m).limit(1).execute()
+[35mclientes/repositorio.py[m[36m:[m[32m174[m[36m:[m            "[1;31mdni[m": datos.get("[1;31mdni[m"),
+[35mclientes/servicio.py[m[36m:[m[32m47[m[36m:[m    def obtener_cliente_por_[1;31mdni[m(self, [1;31mdni[m: str) -> Cliente:
+[35mclientes/servicio.py[m[36m:[m[32m49[m[36m:[m        cliente = self.repo.obtener_por_[1;31mdni[m([1;31mdni[m)
+[35mclientes/servicio.py[m[36m:[m[32m51[m[36m:[m            raise ClienteNoEncontrado([1;31mdni[m)
+[35mclientes/servicio.py[m[36m:[m[32m71[m[36m:[m        if datos.[1;31mdni[m is not None:
+[35mclientes/servicio.py[m[36m:[m[32m72[m[36m:[m            if len(datos.[1;31mdni[m) != 8 or not datos.[1;31mdni[m.isdigit():
+[35mclientes/servicio.py[m[36m:[m[32m74[m[36m:[m            if self.repo.existe_[1;31mdni[m(datos.[1;31mdni[m):
+[35mclientes/servicio.py[m[36m:[m[32m75[m[36m:[m                raise DniDuplicado(datos.[1;31mdni[m)
+[35mclientes/servicio.py[m[36m:[m[32m86[m[36m:[m            "[1;31mdni[m": datos.[1;31mdni[m,
+[35mclientes/servicio.py[m[36m:[m[32m101[m[36m:[m        if datos.[1;31mdni[m is not None:
+[35mclientes/servicio.py[m[36m:[m[32m102[m[36m:[m            if len(datos.[1;31mdni[m) != 8 or not datos.[1;31mdni[m.isdigit():
+[35mclientes/servicio.py[m[36m:[m[32m104[m[36m:[m            if self.repo.existe_[1;31mdni[m(datos.[1;31mdni[m):
+[35mclientes/servicio.py[m[36m:[m[32m105[m[36m:[m                raise DniDuplicado(datos.[1;31mdni[m)
+[35mclientes/servicio.py[m[36m:[m[32m112[m[36m:[m            "[1;31mdni[m": datos.[1;31mdni[m,
+[35mindex.html[m[36m:[m[32m296[m[36m:[m      <div class="dato"><span>DNI</span><span class="mono">${c.[1;31mdni[m||'-'}</span></div>

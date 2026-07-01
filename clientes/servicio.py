@@ -101,7 +101,8 @@ class ClienteServicio:
         if datos.dni is not None:
             if len(datos.dni) != 8 or not datos.dni.isdigit():
                 raise DatosInvalidos("El DNI debe tener exactamente 8 dígitos numéricos.")
-            if self.repo.existe_dni(datos.dni):
+            dueno = self.repo.cliente_id_por_dni(datos.dni)
+            if dueno is not None and dueno != customer_id:
                 raise DniDuplicado(datos.dni)
 
         mapeo = {

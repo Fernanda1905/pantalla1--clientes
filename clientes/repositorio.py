@@ -120,6 +120,15 @@ class ClienteRepositorio:
         )
         return bool(resp.data)
 
+    def cliente_id_por_dni(self, dni: str) -> int | None:
+        """Devuelve el customer_id del cliente que tiene ese DNI, o None si no existe."""
+        resp = (
+            self.db.table("customer").select("customer_id")
+            .eq("dni", dni).limit(1).execute()
+        )
+        filas = resp.data or []
+        return filas[0]["customer_id"] if filas else None
+
     def _obtener_o_crear_country(self, country: str) -> int:
         resp = self.db.table("country").select("country_id").eq("country", country).limit(1).execute()
         if resp.data:
