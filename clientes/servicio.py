@@ -115,4 +115,20 @@ class ClienteServicio:
         campos = {col: val for col, val in mapeo.items() if val is not None}
         if campos:
             self.repo.editar(customer_id, campos)
+
+        city_id = None
+        if datos.city is not None and datos.country is not None:
+            country_id = self.repo._obtener_o_crear_country(datos.country.strip())
+            city_id = self.repo._obtener_o_crear_city(datos.city.strip(), country_id)
+
+        if city_id is not None or datos.address is not None \
+                or datos.codigo_postal is not None or datos.telefono is not None:
+            self.repo.actualizar_direccion(
+                customer_id,
+                city_id=city_id,
+                address=datos.address,
+                postal_code=datos.codigo_postal,
+                phone=datos.telefono,
+            )
+
         return self.obtener_cliente(customer_id)

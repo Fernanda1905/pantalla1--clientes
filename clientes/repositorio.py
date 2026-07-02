@@ -156,6 +156,31 @@ class ClienteRepositorio:
         nuevo = self.db.table("address").insert(datos).execute()
         return nuevo.data[0]["address_id"]
 
+    def actualizar_direccion(self, customer_id: int, city_id: int | None = None,
+                              address: str | None = None, postal_code: str | None = None,
+                              phone: str | None = None) -> None:
+        """Actualiza los campos indicados de la dirección asociada a un cliente."""
+        resp = (
+            self.db.table("customer").select("address_id")
+            .eq("customer_id", customer_id).limit(1).execute()
+        )
+        if not resp.data:
+            return
+        address_id = resp.data[0]["address_id"]
+
+        campos = {}
+        if city_id is not None:
+            campos["city_id"] = city_id
+        if address is not None:
+            campos["address"] = address
+        if postal_code is not None:
+            campos["postal_code"] = postal_code
+        if phone is not None:
+            campos["phone"] = phone
+
+        if campos:
+            self.db.table("address").update(campos).eq("address_id", address_id).execute()
+
     def dar_de_baja(self, customer_id: int) -> None:
         """Marca un cliente como inactivo (active = 0)."""
         self.db.table("customer").update({"active": 0}).eq("customer_id", customer_id).execute()
