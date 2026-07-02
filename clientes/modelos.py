@@ -81,3 +81,4 @@ class DatosEdicionCliente:
     codigo_postal: str | None = None
     telefono: str | None = None
     dni: str | None = None
+    estado: str | None = None

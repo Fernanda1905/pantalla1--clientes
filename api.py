@@ -63,6 +63,7 @@ class ClienteEdicionIn(BaseModel):
     codigo_postal: str | None = None
     telefono: str | None = None
     dni: str | None = None
+    estado: str | None = None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -129,7 +130,7 @@ def editar_cliente(customer_id: int, datos: ClienteEdicionIn):
             address=datos.address, city=datos.city, country=datos.country,
             store_id=datos.store_id,
             codigo_postal=datos.codigo_postal, telefono=datos.telefono,
-            dni=datos.dni,
+            dni=datos.dni, estado=datos.estado,
         ))
         return actualizado.to_dict()
     except ClienteNoEncontrado:

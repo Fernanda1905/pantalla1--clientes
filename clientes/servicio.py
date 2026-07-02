@@ -105,12 +105,25 @@ class ClienteServicio:
             if dueno is not None and dueno != customer_id:
                 raise DniDuplicado(datos.dni)
 
+        active = None
+        if datos.estado is not None:
+            estado_normalizado = datos.estado.strip().lower()
+            if estado_normalizado == "activo":
+                active = 1
+            elif estado_normalizado == "inactivo":
+                active = 0
+            else:
+                raise DatosInvalidos("El estado debe ser 'activo' o 'inactivo'.")
+
+        print(">>> DEBUG estado recibido:", repr(datos.estado), "| active calculado:", active)
+
         mapeo = {
             "first_name": datos.nombre,
             "last_name": datos.apellido,
             "email": datos.email,
             "store_id": datos.store_id,
             "dni": datos.dni,
+            "active": active,
         }
         campos = {col: val for col, val in mapeo.items() if val is not None}
         if campos:
