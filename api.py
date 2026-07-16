@@ -1,20 +1,3 @@
-"""
-API REST de la Pantalla 1 - Listado y Búsqueda de Clientes.
-
-Servicios que expone:
-  GET   /clientes          -> lista / busca clientes (filtros + paginación)
-  GET   /clientes/{id}     -> obtiene un cliente por su ID
-  POST  /clientes          -> registra un cliente nuevo
-
-Cómo levantar la API:
-    uvicorn api:app --reload --port 8001
-
-Documentación interactiva (para probar en el navegador):
-    http://localhost:8001/docs
-
-Interfaz gráfica:
-    http://localhost:8001/
-"""
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -68,14 +51,12 @@ class ClienteEdicionIn(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 def interfaz():
-    """Sirve la página web (la interfaz gráfica) desde el propio FastAPI."""
     ruta = Path(__file__).parent / "index.html"
     return HTMLResponse(ruta.read_text(encoding="utf-8"))
 
 
 @app.get("/api")
 def info_api():
-    """Información de la API (qué servicios expone)."""
     return {
         "modulo": "Pantalla 1 - Listado y Búsqueda de Clientes",
         "autor": "Andrea",

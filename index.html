@@ -133,18 +133,6 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Clientes
     </a>
-    <a class="disabled" href="#" title="Otro módulo del sistema">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-      Catálogo
-    </a>
-    <a class="disabled" href="#" title="Otro módulo del sistema">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-      Pagos
-    </a>
-    <a class="disabled" href="#" title="Otro módulo del sistema">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      Punto de Venta
-    </a>
   </nav>
   <div class="sidebar-foot">
     <button class="theme-btn" onclick="toggleTema()">
@@ -162,7 +150,6 @@
     <span class="estado off" id="estadoApi">Conectando…</span>
   </div>
 
-  <!-- BUSCAR (GET) -->
   <div class="card">
     <h3>Buscar clientes <span class="tag get">GET</span></h3>
     <div class="filtros">
@@ -189,17 +176,15 @@
 
 </main>
 
-<!-- Modal detalle -->
 <div class="modal-bg" id="modalBg" onclick="if(event.target===this)cerrarModal()">
   <div class="modal" id="modalContenido"></div>
 </div>
 
 <script>
-  const API = window.location.origin;  // la misma API que sirve esta página
+  const API = window.location.origin;
   let paginaActual = 1;
   const PORPAG = 10;
 
-  // Tema claro/oscuro
   function toggleTema(){
     const html = document.documentElement;
     const oscuro = html.getAttribute("data-theme") === "dark";
@@ -231,7 +216,6 @@
     paginaActual = pagina;
     const id = document.getElementById("fId").value.trim();
 
-    // Si hay ID, buscar directamente por ID ignorando los demás filtros
     if(id){
       skeleton();
       try{

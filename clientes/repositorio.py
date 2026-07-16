@@ -7,7 +7,6 @@ from .config import get_supabase
 
 
 def _a_cliente(fila: dict) -> Cliente:
-    """Convierte una fila de Supabase (con joins) en un objeto Cliente."""
     address = fila.get("address") or {}
     city = address.get("city") or {}
     country = city.get("country") or {}
@@ -47,7 +46,6 @@ _SELECT = (
 
 
 class ClienteRepositorio:
-    """Acceso a datos de la tabla customer (Pantalla 1 - Listado y Búsqueda)."""
 
     def __init__(self) -> None:
         self.db = get_supabase()
@@ -55,7 +53,6 @@ class ClienteRepositorio:
     def listar(self, nombre: str | None = None, store_id: int | None = None,
                estado: EstadoCliente | None = None,
                pagina: int = 1, por_pagina: int = 10) -> tuple[int, list[Cliente]]:
-        """Lista clientes con filtros opcionales (nombre, tienda, estado) y paginación."""
         query = self.db.table("customer").select(_SELECT, count="exact")
 
         if nombre:
@@ -78,7 +75,6 @@ class ClienteRepositorio:
         return total, items
 
     def obtener(self, customer_id: int) -> Cliente | None:
-        """Obtiene un cliente puntual por su ID, o None si no existe."""
         resp = (
             self.db.table("customer")
             .select(_SELECT)
@@ -89,11 +85,7 @@ class ClienteRepositorio:
         filas = resp.data or []
         return _a_cliente(filas[0]) if filas else None
 
-    # Registro de cliente (POST)
-    # customer, su API expone el servicio de crear clientes.
-
     def obtener_por_dni(self, dni: str) -> Cliente | None:
-        """Obtiene un cliente por DNI, o None si no existe."""
         resp = (
             self.db.table("customer")
             .select(_SELECT)
@@ -105,7 +97,6 @@ class ClienteRepositorio:
         return _a_cliente(filas[0]) if filas else None
 
     def existe_email(self, email: str) -> bool:
-        """True si ya hay un cliente con ese email."""
         resp = (
             self.db.table("customer").select("customer_id")
             .eq("email", email).limit(1).execute()
@@ -113,7 +104,6 @@ class ClienteRepositorio:
         return bool(resp.data)
 
     def existe_dni(self, dni: str) -> bool:
-        """True si ya hay un cliente con ese DNI."""
         resp = (
             self.db.table("customer").select("customer_id")
             .eq("dni", dni).limit(1).execute()
@@ -121,7 +111,6 @@ class ClienteRepositorio:
         return bool(resp.data)
 
     def cliente_id_por_dni(self, dni: str) -> int | None:
-        """Devuelve el customer_id del cliente que tiene ese DNI, o None si no existe."""
         resp = (
             self.db.table("customer").select("customer_id")
             .eq("dni", dni).limit(1).execute()
@@ -151,7 +140,7 @@ class ClienteRepositorio:
         datos = {
             "address": address, "city_id": city_id,
             "postal_code": postal_code or "", "phone": phone or "",
-            "district": "",   # Sakila exige district NOT NULL
+            "district": "",
         }
         nuevo = self.db.table("address").insert(datos).execute()
         return nuevo.data[0]["address_id"]
@@ -159,7 +148,6 @@ class ClienteRepositorio:
     def actualizar_direccion(self, customer_id: int, city_id: int | None = None,
                               address: str | None = None, postal_code: str | None = None,
                               phone: str | None = None) -> None:
-        """Actualiza los campos indicados de la dirección asociada a un cliente."""
         resp = (
             self.db.table("customer").select("address_id")
             .eq("customer_id", customer_id).limit(1).execute()
@@ -182,16 +170,12 @@ class ClienteRepositorio:
             self.db.table("address").update(campos).eq("address_id", address_id).execute()
 
     def dar_de_baja(self, customer_id: int) -> None:
-        """Marca un cliente como inactivo (active = 0)."""
         self.db.table("customer").update({"active": 0}).eq("customer_id", customer_id).execute()
 
     def editar(self, customer_id: int, datos: dict) -> None:
-        """Actualiza los campos indicados en la tabla customer."""
         self.db.table("customer").update(datos).eq("customer_id", customer_id).execute()
 
     def crear(self, datos: dict) -> int:
-        """Registra un cliente nuevo resolviendo la dirección en cascada
-        (country -> city -> address -> customer). Devuelve el customer_id."""
         country_id = self._obtener_o_crear_country(datos["country"])
         city_id = self._obtener_o_crear_city(datos["city"], country_id)
         address_id = self._crear_address(

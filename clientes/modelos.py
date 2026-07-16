@@ -5,13 +5,10 @@ from datetime import datetime
 from enum import Enum
 
 
-# Valores controlados
-
 class EstadoCliente(str, Enum):
     ACTIVO = "activo"
     INACTIVO = "inactivo"
 
-# Entidad principal: Cliente
 
 @dataclass
 class Cliente:
@@ -50,7 +47,6 @@ class Cliente:
             "fecha_registro": self.fecha_registro.strftime("%d/%m/%Y"),
         }
 
-# Datos para registrar un cliente nuevo (entrada del POST)
 
 @dataclass
 class DatosNuevoCliente:
@@ -66,8 +62,6 @@ class DatosNuevoCliente:
     dni: str | None = None
     dni: str | None = None
 
-
-# Datos para editar un cliente (entrada del PUT) — todos opcionales
 
 @dataclass
 class DatosEdicionCliente:

@@ -12,9 +12,6 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 
 def get_supabase() -> Client:
-   
     if not SUPABASE_URL or not SUPABASE_KEY:
-        raise RuntimeError(
-           
-        )
+        raise RuntimeError("Faltan las variables de entorno SUPABASE_URL y SUPABASE_KEY.")
     return create_client(SUPABASE_URL, SUPABASE_KEY)

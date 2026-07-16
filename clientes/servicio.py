@@ -11,7 +11,6 @@ _TIENDAS_VALIDAS = {1, 2}
 
 
 class ClienteServicio:
-    """Lógica de negocio de la Pantalla 1 (Listado y Búsqueda)."""
 
     def __init__(self, repositorio: ClienteRepositorio | None = None) -> None:
         self.repo = repositorio or ClienteRepositorio()
@@ -19,8 +18,6 @@ class ClienteServicio:
     def listar_clientes(self, nombre: str | None = None, store_id: int | None = None,
                         estado: EstadoCliente | None = None,
                         pagina: int = 1, por_pagina: int = 10) -> dict:
-        """Lista/busca clientes con filtros y paginación. Devuelve un dict con
-        el total, la página actual, el total de páginas y los items."""
         if pagina < 1:
             pagina = 1
         if por_pagina < 1:
@@ -38,23 +35,18 @@ class ClienteServicio:
         }
 
     def obtener_cliente(self, customer_id: int) -> Cliente:
-        """Devuelve un cliente por id. Lanza ClienteNoEncontrado si no existe."""
         cliente = self.repo.obtener(customer_id)
         if not cliente:
             raise ClienteNoEncontrado(customer_id)
         return cliente
 
     def obtener_cliente_por_dni(self, dni: str) -> Cliente:
-        """Devuelve un cliente por DNI. Lanza ClienteNoEncontrado si no existe."""
         cliente = self.repo.obtener_por_dni(dni)
         if not cliente:
             raise ClienteNoEncontrado(dni)
         return cliente
 
     def registrar_cliente(self, datos: DatosNuevoCliente) -> Cliente:
-        """Registra un cliente nuevo: valida los datos, verifica que el email no
-        esté repetido, lo crea (con su dirección) y devuelve el Cliente creado."""
-        # Validaciones
         for campo, valor in [("nombre", datos.nombre), ("apellido", datos.apellido),
                              ("address", datos.address), ("city", datos.city),
                              ("country", datos.country)]:
@@ -89,13 +81,11 @@ class ClienteServicio:
         return self.obtener_cliente(nuevo_id)
 
     def dar_de_baja(self, customer_id: int) -> Cliente:
-        """Marca un cliente como inactivo. Lanza ClienteNoEncontrado si no existe."""
         self.obtener_cliente(customer_id)
         self.repo.dar_de_baja(customer_id)
         return self.obtener_cliente(customer_id)
 
     def editar_cliente(self, customer_id: int, datos: DatosEdicionCliente) -> Cliente:
-        """Edita los campos provistos de un cliente. Lanza ClienteNoEncontrado si no existe."""
         self.obtener_cliente(customer_id)
 
         if datos.dni is not None:
